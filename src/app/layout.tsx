@@ -39,6 +39,7 @@ export const metadata: Metadata = {
         icon: '/favicon.ico',
     },
 };
+import { Analytics } from "@vercel/analytics/next"
 
 export default function RootLayout({
   children,
@@ -51,6 +52,7 @@ export default function RootLayout({
         className={`antialiased`}
       >
         {children}
+      <Analytics />
       </body>
     </html>
   );
