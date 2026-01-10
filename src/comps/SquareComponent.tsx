@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 interface SquareProps {
-    imagePath: string;       // default image
-    hoverImagePath?: string; // optional image to show on hover
+    imagePath: string;
+    hoverImagePath?: string;
     squareHeading: string;
     link: string;
 }
@@ -22,7 +22,6 @@ export default function SquareComponent({
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
         >
-            {/* Background image */}
             <div
                 className={`
           absolute inset-0 bg-center bg-cover transform transition-transform duration-500 ease-out
@@ -33,14 +32,11 @@ export default function SquareComponent({
                 }}
             />
 
-            {/* Optional gradient overlay for depth */}
             <div
                 className={`absolute inset-0 transition-colors duration-500 ${
                     hovered ? "bg-black/20" : "bg-black/0"
                 }`}
             ></div>
-
-            {/* Heading as outlined button */}
             <h2
                 className={`
           absolute bottom-5 left-1/2 -translate-x-1/2 px-6 py-2 text-white font-space font-semibold text-lg

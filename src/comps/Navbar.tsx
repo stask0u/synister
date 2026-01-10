@@ -5,6 +5,8 @@ import { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBasketShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { faUser } from '@fortawesome/free-regular-svg-icons'
+import Link from "next/link";
+import Image from "next/image";
 
 export default function Navbar() {
     const [searchOpen, setSearchOpen] = useState(false);
@@ -22,7 +24,7 @@ export default function Navbar() {
 
     return (
         <nav className="w-full h-16 flex items-center justify-between px-8 relative">
-            <img
+            <Image
                 src="/synisterwear.png"
                 alt="SynisterIcon"
                 className="w-24 object-contain"
@@ -56,9 +58,9 @@ export default function Navbar() {
                 </div>
 
                 <ul className="flex gap-8 text-sm uppercase tracking-wide">
-                    <li className="cursor-pointer hover:opacity-70 transition">Home</li>
-                    <li className="cursor-pointer hover:opacity-70 transition">About us</li>
-                    <li className="cursor-pointer hover:opacity-70 transition">Clothes</li>
+                    <li className="cursor-pointer hover:opacity-70 transition"><Link href="/">Home</Link></li>
+                    <li className="cursor-pointer hover:opacity-70 transition"><Link href="/about" >About us</Link></li>
+                    <li className="cursor-pointer hover:opacity-70 transition"><Link href="/clothes">Clothes</Link></li>
                 </ul>
             </div>
 

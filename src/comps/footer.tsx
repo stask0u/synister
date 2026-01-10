@@ -1,11 +1,12 @@
+import Image from "next/image";
+
 export default function Footer() {
     return (
-        <footer className="w-full bg-black text-white mt-20">
+        <main className="w-full bg-black text-white mt-20">
             <div className="max-w-7xl mx-auto px-8 py-14 grid grid-cols-1 md:grid-cols-4 gap-10">
 
-                {/* Brand */}
                 <div className="flex flex-col gap-4">
-                    <img
+                    <Image
                         src="/synisterwear.png"
                         alt="SynisterWear"
                         className="w-32"
@@ -69,6 +70,6 @@ export default function Footer() {
             <div className="border-t border-white/10 py-6 text-center text-xs text-white/50">
                 © {new Date().getFullYear()} SynisterWear. All rights reserved.
             </div>
-        </footer>
+        </main>
     );
 }
