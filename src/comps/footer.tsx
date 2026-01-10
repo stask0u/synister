@@ -9,6 +9,8 @@ export default function Footer() {
                     <Image
                         src="/synisterwear.png"
                         alt="SynisterWear"
+                        width={128}
+                        height={128}
                         className="w-32"
                     />
                     <p className="text-sm text-white/70 leading-relaxed">

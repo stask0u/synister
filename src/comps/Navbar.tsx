@@ -27,6 +27,8 @@ export default function Navbar() {
             <Image
                 src="/synisterwear.png"
                 alt="SynisterIcon"
+                width={96}
+                height={96}
                 className="w-24 object-contain"
             />
 
