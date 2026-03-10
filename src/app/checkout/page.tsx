@@ -80,14 +80,14 @@ export default function CheckoutPage() {
 
         const initialize = async () => {
             try {
-                const cartRes = await axios.get("http://localhost:3001/cart", {
+                const cartRes = await axios.get("https://synister-backend.onrender.com/cart", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setCart(cartRes.data.cart?.items ?? []);
                 setTotal(cartRes.data.totalAmount ?? 0);
 
                 const orderRes = await axios.post(
-                    "http://localhost:3001/orders",
+                    "https://synister-backend.onrender.com/orders",
                     {},
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
