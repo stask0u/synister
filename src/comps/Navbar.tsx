@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useState, useRef, useEffect } from "react";
@@ -7,20 +6,30 @@ import { faBasketShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg
 import { faUser } from '@fortawesome/free-regular-svg-icons'
 import Link from "next/link";
 import Image from "next/image";
+import CartWindow from "@/comps/CartWindow";
+import { useAuth } from "../app/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
     const [searchOpen, setSearchOpen] = useState(false);
+    const [cartOpen, setCartOpen] = useState(false);
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const { user, logout } = useAuth();
+    const router = useRouter();
 
-
-
-
-    // Autofocus when opened
     useEffect(() => {
         if (searchOpen && inputRef.current) {
             inputRef.current.focus();
         }
     }, [searchOpen]);
+
+    const handleUserClick = () => {
+        if (user) {
+            logout();
+        } else {
+            router.push("/login");
+        }
+    };
 
     return (
         <nav className="w-full h-16 flex items-center justify-between px-8 relative">
@@ -33,26 +42,20 @@ export default function Navbar() {
             />
 
             <div className="flex items-center gap-8">
-
                 <div className="relative flex items-center">
-
                     <FontAwesomeIcon
                         icon={faMagnifyingGlass}
                         className="size-4 cursor-pointer"
                         onClick={() => setSearchOpen(prev => !prev)}
                     />
-
                     <input
                         ref={inputRef}
                         type="text"
                         placeholder="Search..."
                         className={`
-                            ml-3
-                            h-9
-                            bg-transparent
+                            ml-3 h-9 bg-transparent
                             border-b border-white/40
-                            text-sm
-                            outline-none
+                            text-sm outline-none
                             transition-all duration-300 ease-out
                             ${searchOpen ? 'w-56 opacity-100' : 'w-0 opacity-0'}
                         `}
@@ -61,15 +64,27 @@ export default function Navbar() {
 
                 <ul className="flex gap-8 text-sm uppercase tracking-wide">
                     <li className="cursor-pointer hover:opacity-70 transition"><Link href="/">Home</Link></li>
-                    <li className="cursor-pointer hover:opacity-70 transition"><Link href="/about" >About us</Link></li>
+                    <li className="cursor-pointer hover:opacity-70 transition"><Link href="/about">About us</Link></li>
                     <li className="cursor-pointer hover:opacity-70 transition"><Link href="/clothes">Clothes</Link></li>
                 </ul>
             </div>
 
-            {/* Right */}
             <div className="flex items-center gap-6">
-                <FontAwesomeIcon icon={faBasketShopping} className="size-5 cursor-pointer" />
-                <FontAwesomeIcon icon={faUser} className="size-5 cursor-pointer" />
+                <div className="relative flex items-center">
+                    <FontAwesomeIcon
+                        icon={faBasketShopping}
+                        onClick={() => setCartOpen(prev => !prev)}
+                        className="size-5 cursor-pointer"
+                    />
+                    {cartOpen && <CartWindow />}
+                </div>
+
+                <div className="flex items-center gap-2 cursor-pointer" onClick={handleUserClick}>
+                    <FontAwesomeIcon icon={faUser} className="size-5" />
+                    {user && (
+                        <span className="text-sm text-black/70">{user.name}</span>
+                    )}
+                </div>
             </div>
         </nav>
     );

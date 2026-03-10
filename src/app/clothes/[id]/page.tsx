@@ -1,20 +1,45 @@
 import { notFound } from "next/navigation";
 import ProductImageSlider from "@/comps/ImageSlider";
-import { products } from "@/lib/products";
 import Navbar from "@/comps/Navbar";
 import Footer from "@/comps/footer";
+import axios from "axios";
+import AddToCartButton from "@/comps/AddToCartBtn";
 
-export default async function ProductPage({
-                                              params,
-                                          }: {
-    params: Promise<{ id: string }>;
+interface Variant {
+    size: string;
+    stock: number;
+}
+
+interface Product {
+    _id: string;
+    name: string;
+    description: string;
+    images: string[];
+    price: number;
+    category: string;
+    subcategory?: string;
+    variants: Variant[];
+    isActive: boolean;
+}
+
+export default async function ProductPage({params}: { params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
 
-    const product = products.find((p) => p.id === id);
+    const res = await fetch(`http://localhost:3001/products/${id}`, {
+        cache: "no-store"
+    });
 
-    if (!product) {
-        notFound();
+    if (!res.ok) notFound();
+
+
+
+    const product: Product = await res.json();
+
+
+    async function AddToCart(){
+            const res = await axios.post("http://localhost:3001/cart", {product_id:product._id,size:"L"});
+            console.log(res.data);
     }
 
     return (
@@ -22,13 +47,11 @@ export default async function ProductPage({
             <Navbar/>
             <div className="mx-auto max-w-7xl px-6 py-16">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                    {/* Image slider */}
                     <ProductImageSlider
                         images={product.images}
                         productName={product.name}
                     />
 
-                    {/* Product info */}
                     <div className="flex flex-col justify-center">
                         <h1 className="text-4xl font-semibold tracking-tight">
                             {product.name}
@@ -40,29 +63,7 @@ export default async function ProductPage({
                             {product.description}
                         </p>
 
-                        <div className="mt-10">
-                            <h3 className="text-sm font-medium">Size</h3>
-                            <div className="mt-4 flex gap-3">
-                                {product.sizes.map((size) => (
-                                    <button
-                                        key={size}
-                                        className="h-11 w-11 rounded-md border border-gray-300 text-sm font-medium
-                             hover:border-black transition-colors"
-                                    >
-                                        {size}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <button
-                            className="mt-12 h-14 w-full rounded-md border border-black
-                       text-sm font-semibold tracking-wide
-                       hover:bg-black hover:text-white
-                       transition-colors"
-                        >
-                            Add to cart
-                        </button>
+                        <AddToCartButton productId={product._id} variants={product.variants} />
                     </div>
                 </div>
             </div>

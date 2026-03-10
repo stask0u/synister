@@ -40,6 +40,7 @@ export const metadata: Metadata = {
     },
 };
 import { Analytics } from "@vercel/analytics/next"
+import { AuthProvider } from "./context/AuthContext";
 
 export default function RootLayout({
   children,
@@ -51,8 +52,10 @@ export default function RootLayout({
       <body
         className={`antialiased`}
       >
-        {children}
-      <Analytics />
+      <AuthProvider>
+          {children}
+          <Analytics />
+      </AuthProvider>
       </body>
     </html>
   );

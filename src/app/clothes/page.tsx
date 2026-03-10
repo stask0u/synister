@@ -1,21 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/comps/Navbar";
 import Footer from "@/comps/footer";
-import { products } from "@/lib/products"
+import axios from "axios";
+
+interface Variant {
+    size: string;
+    stock: number;
+}
+
+interface Product {
+    _id: string;
+    name: string;
+    description: string;
+    images: string[];
+    price: number;
+    category: string;
+    subcategory?: string;
+    variants: Variant[];
+    isActive: boolean;
+}
 
 export default function ProductsPage() {
     const [category, setCategory] = useState<string>("all");
     const [maxPrice, setMaxPrice] = useState<number>(200);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const getProducts = async () => {
+            try {
+                const response = await axios.get("http://localhost:3001/products");
+                setProducts(response.data);
+            } catch (err) {
+                console.error("Failed to fetch products:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getProducts();
+    }, []);
 
     const filteredProducts = products.filter(
         (product) =>
-            (category === "all" || product.category === category) &&
+            (category === "all" || product.subcategory === category || product.category===category) &&
             product.price <= maxPrice
     );
+
+    if (loading) return <div>Loading...</div>;
 
     return (
         <>
@@ -72,8 +108,8 @@ export default function ProductsPage() {
                 <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {filteredProducts.map((product) => (
                         <Link
-                            key={product.id}
-                            href={`/clothes/${product.id}`}
+                            key={product._id}
+                            href={`/clothes/${product._id}`}
                             className="group flex flex-col gap-4"
                         >
                             <div className="relative w-full h-[360px] overflow-hidden rounded-xl bg-neutral-100">
