@@ -100,7 +100,7 @@ export default function CheckoutPage() {
                 setLoading(false);
             }
         };
-
+    //nothing to add here
         initialize();
     }, [token]);
 
