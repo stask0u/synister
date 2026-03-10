@@ -33,7 +33,7 @@ export default function ProductsPage() {
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const response = await axios.get("http://localhost:3001/products");
+                const response = await axios.get("https://synister-backend.onrender.com/products");
                 setProducts(response.data);
             } catch (err) {
                 console.error("Failed to fetch products:", err);

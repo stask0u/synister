@@ -29,7 +29,7 @@ export default function CartWindow() {
     useEffect(() => {
         const getCartItems = async () => {
             try {
-                const response = await axios.get("http://localhost:3001/cart", {
+                const response = await axios.get("https://synister-backend.onrender.com/cart", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setCart(response.data.cart?.items ?? []);
@@ -47,7 +47,7 @@ export default function CartWindow() {
 
     const removeItem = async (itemId: string) => {
         try {
-            await axios.delete(`http://localhost:3001/cart/${itemId}`, {
+            await axios.delete(`https://synister-backend.onrender.com/cart/${itemId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

@@ -26,7 +26,7 @@ export default async function ProductPage({params}: { params: Promise<{ id: stri
 }) {
     const { id } = await params;
 
-    const res = await fetch(`http://localhost:3001/products/${id}`, {
+    const res = await fetch(`https://synister-backend.onrender.com/products/${id}`, {
         cache: "no-store"
     });
 
@@ -38,7 +38,7 @@ export default async function ProductPage({params}: { params: Promise<{ id: stri
 
 
     async function AddToCart(){
-            const res = await axios.post("http://localhost:3001/cart", {product_id:product._id,size:"L"});
+            const res = await axios.post("https://synister-backend.onrender.com/cart", {product_id:product._id,size:"L"});
             console.log(res.data);
     }
 

@@ -26,7 +26,7 @@ export default function AddToCartButton({ productId, variants }: Props) {
         }
         try {
             await axios.post(
-                "http://localhost:3001/cart",
+                "https://synister-backend.onrender.com/cart",
                 { product_id: productId, size: selectedSize, quantity: 1 },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

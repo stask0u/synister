@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     const login = async (email: string, password: string) => {
-        const res = await axios.post("http://localhost:3001/users/login", { email, password });
+        const res = await axios.post("https://synister-backend.onrender.com/users/login", { email, password });
         setToken(res.data.token);
         setUser(res.data.user);
         console.log(res.data.user);
@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const register = async (name: string, email: string, password: string) => {
-        await axios.post("http://localhost:3001/users/register", { name, email, password });
+        await axios.post("https://synister-backend.onrender.com/users/register", { name, email, password });
     };
 
     const logout = () => {
