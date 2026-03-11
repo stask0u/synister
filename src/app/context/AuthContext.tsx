@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -42,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(res.data.user);
         console.log(res.data.user);
         console.log(res.data.token);
-        Cookies.set("user", res.data.user);
+        Cookies.set("user", JSON.stringify(res.data.user));
         Cookies.set("token", res.data.token);
     };
 
@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setToken(null);
         setUser(null);
         Cookies.remove("user");
-        Cookies.set("token", "");
+        Cookies.remove("token");
     };
 
     return (
