@@ -2,9 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,{
-    apiVersion:"2024-06-20"
-});
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { useAuth } from "@/app/context/AuthContext";
