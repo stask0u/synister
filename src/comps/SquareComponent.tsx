@@ -1,4 +1,7 @@
+"use client";
+
 import { useState } from "react";
+import Image from "next/image";
 
 interface SquareProps {
     imagePath: string;
@@ -22,14 +25,14 @@ export default function SquareComponent({
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
         >
-            <div
-                className={`
-          absolute inset-0 bg-center bg-cover transform transition-transform duration-500 ease-out
-          ${hovered ? "scale-105" : "scale-100"}
-        `}
-                style={{
-                    backgroundImage: `url(${hovered && hoverImagePath ? hoverImagePath : imagePath})`,
-                }}
+            <Image
+                src={hovered && hoverImagePath ? hoverImagePath : imagePath}
+                alt={squareHeading}
+                fill
+                sizes="(max-width: 768px) 100vw, 25vw"
+                className={`object-cover transition-transform duration-500 ease-out ${
+                    hovered ? "scale-105" : "scale-100"
+                }`}
             />
 
             <div

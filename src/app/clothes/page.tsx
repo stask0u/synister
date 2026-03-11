@@ -15,6 +15,7 @@ interface Variant {
 interface Product {
     _id: string;
     name: string;
+    slug?: string;
     description: string;
     images: string[];
     price: number;
@@ -109,7 +110,7 @@ export default function ProductsPage() {
                     {filteredProducts.map((product) => (
                         <Link
                             key={product._id}
-                            href={`/clothes/${product._id}`}
+                            href={`/clothes/${product.slug ?? product._id}`}
                             className="group flex flex-col gap-4"
                         >
                             <div className="relative w-full h-[360px] overflow-hidden rounded-xl bg-neutral-100">

@@ -6,9 +6,13 @@ import { faBasketShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg
 import { faUser } from '@fortawesome/free-regular-svg-icons'
 import Link from "next/link";
 import Image from "next/image";
-import CartWindow from "@/comps/CartWindow";
-import { useAuth } from "../app/context/AuthContext";
+import dynamic from "next/dynamic";
+import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
+
+const CartWindow = dynamic(() => import("@/comps/CartWindow"), {
+    ssr: false,
+});
 
 export default function Navbar() {
     const [searchOpen, setSearchOpen] = useState(false);

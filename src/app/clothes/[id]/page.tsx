@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import ProductImageSlider from "@/comps/ImageSlider";
 import Navbar from "@/comps/Navbar";
 import Footer from "@/comps/footer";
-import axios from "axios";
 import AddToCartButton from "@/comps/AddToCartBtn";
 
 interface Variant {
@@ -13,6 +12,7 @@ interface Variant {
 interface Product {
     _id: string;
     name: string;
+    slug: string;
     description: string;
     images: string[];
     price: number;
@@ -22,25 +22,41 @@ interface Product {
     isActive: boolean;
 }
 
-export default async function ProductPage({params}: { params: Promise<{ id: string }>;
-}) {
-    const { id } = await params;
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    const res = await fetch(`https://synister-backend.onrender.com/products/slug/${slug}`);
+    if (!res.ok) return {};
+    const product = await res.json();
 
-    const res = await fetch(`https://synister-backend.onrender.com/products/${id}`, {
-        cache: "no-store"
+    return {
+        title: `${product.name} | SynisterWear`,
+        description: product.description?.slice(0, 155),
+        openGraph: {
+            images: [product.images[0]],
+        },
+    };
+}
+
+export async function generateStaticParams() {
+    const res = await fetch("https://synister-backend.onrender.com/products");
+    const products = await res.json();
+
+    return products.map((p: { slug?: string; _id: string }) => ({
+        slug: p.slug ?? p._id,
+    }));
+}
+
+
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+
+    const res = await fetch(`https://synister-backend.onrender.com/products/slug/${slug}`, {
+        next: { revalidate: 3600 }
     });
 
     if (!res.ok) notFound();
 
-
-
     const product: Product = await res.json();
-
-
-    async function AddToCart(){
-            const res = await axios.post("https://synister-backend.onrender.com/cart", {product_id:product._id,size:"L"});
-            console.log(res.data);
-    }
 
     return (
         <>

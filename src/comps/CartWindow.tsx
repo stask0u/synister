@@ -7,6 +7,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface CartItem {
     _id: string;
@@ -87,9 +88,11 @@ export default function CartWindow() {
                 <>
                     {cart.map((item) => (
                         <div key={item._id} className="flex gap-4 py-3 border-b border-white/10 relative">
-                            <img
+                            <Image
                                 src={item.product_id.images[0]}
                                 alt={item.product_id.name}
+                                width={64}
+                                height={64}
                                 className="w-16 h-16 object-cover rounded"
                             />
                             <div className="flex flex-col justify-between flex-1">
