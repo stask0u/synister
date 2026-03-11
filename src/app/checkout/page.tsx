@@ -2,17 +2,16 @@
 
 import { useEffect, useState, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 
-const stripePromise = loadStripe("pk_test_51SGdbnR6mHOuwoGqHikNYYkzEqEv1mkey7nmWAjKKEgELg1V3R5U4yDXb66AY2WuGN1VlQjHycDULsjScyWWnp0m00nTe1uAZl");
 
 function CheckoutForm({ orderId }: { orderId: string }) {
     const stripe = useStripe();
     const elements = useElements();
-    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -100,7 +99,6 @@ export default function CheckoutPage() {
                 setLoading(false);
             }
         };
-    //nothing to add here
         initialize();
     }, [token]);
 
