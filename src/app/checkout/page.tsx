@@ -6,10 +6,7 @@ import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-
 import axios from "axios";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!, {
-    apiVersion: "2024-06-20"
-});
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 
 function CheckoutForm({ orderId }: { orderId: string }) {
