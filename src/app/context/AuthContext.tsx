@@ -40,8 +40,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const res = await axios.post("https://synister-backend.onrender.com/users/login", { email, password });
         setToken(res.data.token);
         setUser(res.data.user);
-        console.log(res.data.user);
-        console.log(res.data.token);
         Cookies.set("user", JSON.stringify(res.data.user));
         Cookies.set("token", res.data.token);
     };

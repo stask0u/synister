@@ -1,19 +1,13 @@
 "use client";
 
 import { Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 function OrderSuccessContent() {
     const searchParams = useSearchParams();
-    const router = useRouter();
     const orderId = searchParams.get("orderId");
     const redirectStatus = searchParams.get("redirect_status");
-
-    if (!orderId) {
-        router.push("/");
-        return null;
-    }
 
     if (redirectStatus === "failed") {
         return (
@@ -37,7 +31,7 @@ function OrderSuccessContent() {
             <p className="text-neutral-400 max-w-md">
                 Thank you for your purchase. Your order has been placed and will be processed shortly.
             </p>
-            <p className="text-xs text-neutral-600">Order ID: {orderId}</p>
+            {orderId && <p className="text-xs text-neutral-600">Order ID: {orderId}</p>}
             <Link
                 href="/clothes"
                 className="px-6 py-3 border border-white text-sm font-medium hover:bg-white hover:text-black transition-colors"

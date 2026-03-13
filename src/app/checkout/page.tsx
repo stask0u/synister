@@ -66,7 +66,7 @@ export default function CheckoutPage() {
     const [clientSecret, setClientSecret] = useState("");
     const [orderId, setOrderId] = useState("");
     const [loading, setLoading] = useState(true);
-    const initialized = useRef(false); // ✅ тук е правилното място
+    const initialized = useRef(false);
 
     useEffect(() => {
         if (initialized.current) return;
