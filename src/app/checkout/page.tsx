@@ -6,7 +6,7 @@ import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-
 import axios from "axios";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
-const stripePromise = loadStripe("pk_test_51SGdbnR6mHOuwoGqHikNYYkzEqEv1mkey7nmWAjKKEgELg1V3R5U4yDXb66AY2WuGN1VlQjHycDULsjScyWWnp0m00nTe1uAZl");
+const stripePromise = loadStripe("pk_live_51TCMltR4w1bZj6pFzgKeeiDUc23WNMqvbUl57THybjLLXge8jPVxHfnCa0QbEiCnEFYFUDUVcUGFohqZtT3RV1sH00QsWOx7S5");
 
 
 function CheckoutForm({ orderId }: { orderId: string }) {
