@@ -6,8 +6,16 @@ import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-
 import axios from "axios";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
+
 const stripePromise = loadStripe("pk_live_51TCMltR4w1bZj6pFzgKeeiDUc23WNMqvbUl57THybjLLXge8jPVxHfnCa0QbEiCnEFYFUDUVcUGFohqZtT3RV1sH00QsWOx7S5");
 
+interface ShippingAddress {
+    fullName: string;
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+}
 
 function CheckoutForm({ orderId }: { orderId: string }) {
     const stripe = useStripe();
@@ -58,6 +66,8 @@ interface CartItem {
     quantity: number;
 }
 
+const inputClass = "w-full bg-transparent border border-white/20 px-3 py-2 text-sm focus:outline-none focus:border-white/60 transition-colors placeholder:opacity-40";
+
 export default function CheckoutPage() {
     const { token } = useAuth();
     const router = useRouter();
@@ -66,7 +76,44 @@ export default function CheckoutPage() {
     const [clientSecret, setClientSecret] = useState("");
     const [orderId, setOrderId] = useState("");
     const [loading, setLoading] = useState(true);
+    const [shippingError, setShippingError] = useState("");
+    const [shippingConfirmed, setShippingConfirmed] = useState(false);
     const initialized = useRef(false);
+
+    const [shipping, setShipping] = useState<ShippingAddress>({
+        fullName: "",
+        address: "",
+        city: "",
+        postalCode: "",
+        country: "",
+    });
+
+    function handleShippingChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setShipping(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    }
+
+    async function handleConfirmShipping() {
+        const { fullName, address, city, postalCode, country } = shipping;
+        if (!fullName || !address || !city || !postalCode || !country) {
+            setShippingError("All shipping fields are required.");
+            return;
+        }
+        setShippingError("");
+
+        try {
+            const orderRes = await axios.post(
+                "https://synister-backend.onrender.com/orders",
+                { shippingAddress: shipping },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            setOrderId(orderRes.data.order._id);
+            setClientSecret(orderRes.data.clientSecret);
+            setShippingConfirmed(true);
+        } catch (err) {
+            console.error("Order creation failed:", err);
+            setShippingError("Failed to create order. Please try again.");
+        }
+    }
 
     useEffect(() => {
         if (initialized.current) return;
@@ -84,17 +131,8 @@ export default function CheckoutPage() {
                 });
                 setCart(cartRes.data.cart?.items ?? []);
                 setTotal(cartRes.data.totalAmount ?? 0);
-
-                const orderRes = await axios.post(
-                    "https://synister-backend.onrender.com/orders",
-                    {},
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
-                setOrderId(orderRes.data.order._id);
-                setClientSecret(orderRes.data.clientSecret);
-
             } catch (err) {
-                console.error("Checkout init failed:", err);
+                console.error("Cart fetch failed:", err);
             } finally {
                 setLoading(false);
             }
@@ -103,15 +141,16 @@ export default function CheckoutPage() {
     }, [token]);
 
     if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-    if (!clientSecret) return <div className="min-h-screen flex items-center justify-center">Failed to initialize payment</div>;
 
     return (
         <div className="min-h-screen mx-auto max-w-4xl px-6 py-16">
             <h1 className="text-3xl font-semibold tracking-tight mb-12">Checkout</h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+
+                {/* Left — order summary */}
                 <div className="flex flex-col gap-4">
-                    <h2 className="text-lg font-medium">Order Summary</h2>
+                    <h2 className="text-lg font-medium">Order summary</h2>
                     {cart.map((item) => (
                         <div key={item._id} className="flex gap-4 py-3 border-b border-white/10">
                             <img
@@ -133,11 +172,65 @@ export default function CheckoutPage() {
                     </div>
                 </div>
 
-                <div>
-                    <h2 className="text-lg font-medium mb-6">Payment</h2>
-                    <Elements stripe={stripePromise} options={{ clientSecret }}>
-                        <CheckoutForm orderId={orderId} />
-                    </Elements>
+                {/* Right — shipping then payment */}
+                <div className="flex flex-col gap-10">
+
+                    {/* Shipping form */}
+                    <div>
+                        <h2 className="text-lg font-medium mb-6">Shipping address</h2>
+                        <div className="flex flex-col gap-3">
+                            {[
+                                { name: "fullName", placeholder: "Full name" },
+                                { name: "address", placeholder: "Street address" },
+                                { name: "city", placeholder: "City" },
+                                { name: "postalCode", placeholder: "Postal code" },
+                                { name: "country", placeholder: "Country" },
+                            ].map(f => (
+                                <input
+                                    key={f.name}
+                                    name={f.name}
+                                    placeholder={f.placeholder}
+                                    value={(shipping as any)[f.name]}
+                                    onChange={handleShippingChange}
+                                    disabled={shippingConfirmed}
+                                    className={inputClass + (shippingConfirmed ? " opacity-40 cursor-not-allowed" : "")}
+                                />
+                            ))}
+                        </div>
+
+                        {shippingError && <p className="text-red-500 text-sm mt-3">{shippingError}</p>}
+
+                        {!shippingConfirmed && (
+                            <button
+                                onClick={handleConfirmShipping}
+                                className="mt-4 h-11 w-full border border-white text-sm font-semibold tracking-wide hover:bg-white hover:text-black transition-colors"
+                            >
+                                Continue to payment
+                            </button>
+                        )}
+
+                        {shippingConfirmed && (
+                            <div className="mt-3 flex items-center justify-between">
+                                <p className="text-xs opacity-50">Address confirmed</p>
+                                <button
+                                    onClick={() => { setShippingConfirmed(false); setClientSecret(""); }}
+                                    className="text-xs opacity-50 hover:opacity-100 underline"
+                                >
+                                    Edit
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Payment — only shown after shipping confirmed */}
+                    {shippingConfirmed && clientSecret && (
+                        <div>
+                            <h2 className="text-lg font-medium mb-6">Payment</h2>
+                            <Elements stripe={stripePromise} options={{ clientSecret }}>
+                                <CheckoutForm orderId={orderId} />
+                            </Elements>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
