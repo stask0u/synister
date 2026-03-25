@@ -42,6 +42,7 @@ export default function ProductImageSlider({
                             alt={`${productName} thumbnail ${index + 1}`}
                             fill
                             className="object-cover"
+                            unoptimized
                         />
                     </button>
                 ))}
