@@ -21,6 +21,7 @@ export default function ProductImageSlider({
                     fill
                     priority
                     className="object-cover transition-transform duration-500 hover:scale-105"
+                    unoptimized
                 />
             </div>
 
