@@ -21,7 +21,7 @@ export default function SquareComponent({
     return (
         <a
             href={link}
-            className="relative group w-full h-80 rounded-lg overflow-hidden shadow-lg cursor-pointer"
+            className="relative group w-full aspect-[4/5] rounded-sm overflow-hidden shadow-sm block"
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
         >
@@ -29,27 +29,28 @@ export default function SquareComponent({
                 src={hovered && hoverImagePath ? hoverImagePath : imagePath}
                 alt={squareHeading}
                 fill
-                sizes="(max-width: 768px) 100vw, 25vw"
-                className={`object-cover transition-transform duration-500 ease-out ${
-                    hovered ? "scale-105" : "scale-100"
+                sizes="(max-width: 640px) 50vw, 25vw"
+                className={`object-cover transition-transform duration-700 ease-in-out ${
+                    hovered ? "scale-110" : "scale-100"
                 }`}
             />
 
-            <div
-                className={`absolute inset-0 transition-colors duration-500 ${
-                    hovered ? "bg-black/20" : "bg-black/0"
-                }`}
-            ></div>
-            <h2
-                className={`
-          absolute bottom-5 left-1/2 -translate-x-1/2 px-6 py-2 text-white font-space font-semibold text-lg
-          border-2 border-white rounded-md
-          transition-all duration-500
-          ${hovered ? "border-pink-500 translate-y-[-5px] tracking-wider" : ""}
-        `}
-            >
-                {squareHeading}
-            </h2>
+            {/* Darken overlay on hover */}
+            <div className={`absolute inset-0 transition-opacity duration-300 bg-black/10 ${hovered ? "opacity-100" : "opacity-0"}`} />
+
+            {/* Centered Heading Box */}
+            <div className="absolute inset-0 flex items-center justify-center p-4">
+                <div className={`
+                    border border-white bg-black/20 backdrop-blur-[2px] 
+                    text-white text-center py-2 px-3 w-full max-w-[140px]
+                    transition-all duration-300 pointer-events-none
+                    ${hovered ? "border-pink-500 scale-105" : "border-white"}
+                `}>
+                    <h2 className="text-[11px] sm:text-xs uppercase tracking-widest font-bold leading-tight">
+                        {squareHeading}
+                    </h2>
+                </div>
+            </div>
         </a>
     );
 }

@@ -49,7 +49,6 @@ export async function generateStaticParams() {
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    console.log(slug);
 
     const res = await fetch(`https://synister-backend.onrender.com/products/slug/${slug}`, {
         next: { revalidate: 3600 }
@@ -58,6 +57,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     if (!res.ok) notFound();
 
     const product: Product = await res.json();
+    console.log(product.images);
 
     return (
         <>
