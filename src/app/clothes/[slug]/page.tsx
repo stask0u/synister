@@ -40,6 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export async function generateStaticParams() {
     const res = await fetch(`${API_URL}/products`);
+    if (!res.ok) return [];
     const products = await res.json();
 
     return products.map((p: { slug?: string; _id: string }) => ({
