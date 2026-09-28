@@ -6,6 +6,7 @@ import Link from "next/link";
 import Navbar from "@/comps/Navbar";
 import Footer from "@/comps/footer";
 import axios from "axios";
+import { API_URL } from "@/lib/config";
 
 interface Variant {
     size: string;
@@ -34,7 +35,7 @@ export default function ProductsPage() {
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const response = await axios.get("https://synister-backend.onrender.com/products");
+                const response = await axios.get(`${API_URL}/products`);
                 setProducts(response.data);
             } catch (err) {
                 console.error("Failed to fetch products:", err);

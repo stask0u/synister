@@ -4,6 +4,7 @@ import Cookies from 'js-cookie'
 import {useEffect, useState} from "react";
 import { useRouter } from 'next/navigation'
 import Navbar from "@/comps/Navbar";
+import { API_URL } from "@/lib/config";
 
 interface User {
     id: string
@@ -154,7 +155,7 @@ function Products() {
 
     async function load() {
         try {
-            const res = await fetch(`https://synister-backend.onrender.com/products`, { headers: getAuthHeaders() })
+            const res = await fetch(`${API_URL}/products`, { headers: getAuthHeaders() })
             const data = await res.json()
             setProducts(Array.isArray(data) ? data : [])
         } catch { setError('Failed to load products') }
@@ -202,7 +203,7 @@ function Products() {
             isActive: form.isActive,
         }
         try {
-            const url = editId ? `https://synister-backend.onrender.com/products/${editId}` : `https://synister-backend.onrender.com/products`
+            const url = editId ? `${API_URL}/products/${editId}` : `${API_URL}/products`
             const method = editId ? 'PUT' : 'POST'
             const res = await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(body) })
             if (!res.ok) {
@@ -218,14 +219,14 @@ function Products() {
 
     async function handleDelete(id: string) {
         try {
-            await fetch(`https://synister-backend.onrender.com/products/${id}`, { method: 'DELETE', headers: getAuthHeaders() })
+            await fetch(`${API_URL}/products/${id}`, { method: 'DELETE', headers: getAuthHeaders() })
             setDeleteConfirm(null)
             load()
         } catch { setError('Failed to delete') }
     }
 
     async function toggleActive(p: Product) {
-        await fetch(`https://synister-backend.onrender.com/products/${p._id}`, {
+        await fetch(`${API_URL}/products/${p._id}`, {
             method: 'PUT',
             headers: getAuthHeaders(),
             body: JSON.stringify({ isActive: !p.isActive }),
@@ -369,7 +370,7 @@ function Orders() {
 
     async function load() {
         try {
-            const res = await fetch(`https://synister-backend.onrender.com/orders`, { headers: getAuthHeaders() })
+            const res = await fetch(`${API_URL}/orders`, { headers: getAuthHeaders() })
             const data = await res.json()
             setOrders(Array.isArray(data) ? data : [])
         } catch { setError('Failed to load orders') }
@@ -381,7 +382,7 @@ function Orders() {
     async function updateStatus(id: string, field: 'paymentStatus' | 'shippingStatus', value: string) {
         setUpdating(id)
         try {
-            await fetch(`https://synister-backend.onrender.com/orders/${id}/status`, {
+            await fetch(`${API_URL}/orders/${id}/status`, {
                 method: 'PATCH',
                 headers: getAuthHeaders(),
                 body: JSON.stringify({ [field]: value }),
@@ -497,7 +498,7 @@ export default function AdminPanel() {
 
     useEffect(() => {
         if (!loading) {
-            fetch(`https://synister-backend.onrender.com/orders`, { headers: getAuthHeaders() })
+            fetch(`${API_URL}/orders`, { headers: getAuthHeaders() })
                 .then(r => r.json())
                 .then(d => setOrders(Array.isArray(d) ? d : []))
                 .catch(() => {})

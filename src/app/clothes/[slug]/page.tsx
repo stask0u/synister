@@ -3,6 +3,7 @@ import ProductImageSlider from "@/comps/ImageSlider";
 import Navbar from "@/comps/Navbar";
 import Footer from "@/comps/footer";
 import AddToCartButton from "@/comps/AddToCartBtn";
+import { API_URL } from "@/lib/config";
 
 interface Variant {
     size: string;
@@ -24,7 +25,7 @@ interface Product {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const res = await fetch(`https://synister-backend.onrender.com/products/slug/${slug}`);
+    const res = await fetch(`${API_URL}/products/slug/${slug}`);
     if (!res.ok) return {};
     const product = await res.json();
 
@@ -38,7 +39,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export async function generateStaticParams() {
-    const res = await fetch("https://synister-backend.onrender.com/products");
+    const res = await fetch(`${API_URL}/products`);
     const products = await res.json();
 
     return products.map((p: { slug?: string; _id: string }) => ({
@@ -50,7 +51,7 @@ export async function generateStaticParams() {
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
 
-    const res = await fetch(`https://synister-backend.onrender.com/products/slug/${slug}`, {
+    const res = await fetch(`${API_URL}/products/slug/${slug}`, {
         next: { revalidate: 3600 }
     });
 

@@ -3,6 +3,7 @@
 import { useAuth } from "../app/context/AuthContext";
 import axios from "axios";
 import { useState } from "react";
+import { API_URL } from "@/lib/config";
 
 interface Variant {
     size: string;
@@ -26,7 +27,7 @@ export default function AddToCartButton({ productId, variants }: Props) {
         }
         try {
             await axios.post(
-                "https://synister-backend.onrender.com/cart",
+                `${API_URL}/cart`,
                 { product_id: productId, size: selectedSize, quantity: 1 },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

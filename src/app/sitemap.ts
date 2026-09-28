@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { API_URL } from "@/lib/config";
 
 type Product = {
   _id: string;
@@ -17,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    const res = await fetch("https://synister-backend.onrender.com/products", {
+    const res = await fetch(`${API_URL}/products`, {
       next: { revalidate: 60 * 60 },
     });
 

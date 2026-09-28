@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { API_URL } from "@/lib/config";
 
 interface CartItem {
     _id: string;
@@ -30,7 +31,7 @@ export default function CartWindow() {
     useEffect(() => {
         const getCartItems = async () => {
             try {
-                const response = await axios.get("https://synister-backend.onrender.com/cart", {
+                const response = await axios.get(`${API_URL}/cart`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setCart(response.data.cart?.items ?? []);
@@ -48,7 +49,7 @@ export default function CartWindow() {
 
     const removeItem = async (itemId: string) => {
         try {
-            await axios.delete(`https://synister-backend.onrender.com/cart/${itemId}`, {
+            await axios.delete(`${API_URL}/cart/${itemId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

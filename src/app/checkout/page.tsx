@@ -6,6 +6,7 @@ import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-
 import axios from "axios";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/lib/config";
 
 const stripePromise = loadStripe("pk_live_51TCMltR4w1bZj6pFzgKeeiDUc23WNMqvbUl57THybjLLXge8jPVxHfnCa0QbEiCnEFYFUDUVcUGFohqZtT3RV1sH00QsWOx7S5");
 
@@ -102,7 +103,7 @@ export default function CheckoutPage() {
 
         try {
             const orderRes = await axios.post(
-                "https://synister-backend.onrender.com/orders",
+                `${API_URL}/orders`,
                 { shippingAddress: shipping },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -126,7 +127,7 @@ export default function CheckoutPage() {
 
         const initialize = async () => {
             try {
-                const cartRes = await axios.get("https://synister-backend.onrender.com/cart", {
+                const cartRes = await axios.get(`${API_URL}/cart`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setCart(cartRes.data.cart?.items ?? []);

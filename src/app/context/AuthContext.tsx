@@ -3,6 +3,7 @@
 import { createContext, useContext, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { API_URL } from "@/lib/config";
 
 interface User {
     id: string;
@@ -37,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     const login = async (email: string, password: string) => {
-        const res = await axios.post("https://synister-backend.onrender.com/users/login", { email, password });
+        const res = await axios.post(`${API_URL}/users/login`, { email, password });
         setToken(res.data.token);
         setUser(res.data.user);
         Cookies.set("user", JSON.stringify(res.data.user));
@@ -45,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const register = async (name: string, email: string, password: string) => {
-        await axios.post("https://synister-backend.onrender.com/users/register", { name, email, password });
+        await axios.post(`${API_URL}/users/register`, { name, email, password });
     };
 
     const logout = () => {
